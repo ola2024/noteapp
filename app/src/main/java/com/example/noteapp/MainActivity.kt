@@ -17,6 +17,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+@Composable
+fun MainContent(){
+
+}
 
 @Composable
 fun MyApp(content: @Composable () -> Unit) {
