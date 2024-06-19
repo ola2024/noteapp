@@ -119,7 +119,7 @@ fun NoteScreen(
             Button(
                 onClick = { },
                 modifier = Modifier.padding(top = 20.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
+                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray.copy(alpha = 1f))
             ) {
                 Text(text = stringResource(id = R.string.save))
             }
