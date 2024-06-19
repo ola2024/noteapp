@@ -41,12 +41,12 @@ import androidx.compose.ui.unit.sp
 import com.example.noteapp.R
 import com.example.noteapp.common.InputTextField
 import com.example.noteapp.model.dummyDate
-import com.example.noteapp.model.items
+import com.example.noteapp.model.Items
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
-    itemList: List<items> = dummyDate()
+    itemList: List<Items> = dummyDate()
 ) {
     val expanded = remember {
         mutableStateOf(false)
@@ -134,7 +134,7 @@ fun NoteScreen(
 }
 
 @Composable
-fun ContentRow(item: items) {
+fun ContentRow(item: Items) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
