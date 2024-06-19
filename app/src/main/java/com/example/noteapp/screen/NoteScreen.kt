@@ -1,15 +1,21 @@
 package com.example.noteapp.screen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -22,19 +28,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.noteapp.R
 import com.example.noteapp.common.InputTextField
+import com.example.noteapp.model.dummyDate
+import com.example.noteapp.model.items
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NoteScreen() {
+fun NoteScreen(
+    itemList: List<items> = dummyDate()
+) {
     val expanded = remember {
         mutableStateOf(false)
     }
@@ -74,7 +87,8 @@ fun NoteScreen() {
         )
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
 
             InputTextField(
@@ -103,14 +117,85 @@ fun NoteScreen() {
             ) { addNote.value = it }
 
             Button(
-                onClick = {
-
-                },
+                onClick = { },
                 modifier = Modifier.padding(top = 20.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray)
             ) {
                 Text(text = stringResource(id = R.string.save))
             }
+            Divider(modifier = Modifier.fillMaxWidth(), thickness = 4.dp)
+            LazyColumn(modifier = Modifier.padding(top = 10.dp, start = 10.dp, end = 10.dp)) {
+                items(items = itemList) { newItem ->
+                    ContentRow(item = newItem)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ContentRow(item: items) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        elevation = CardDefaults.cardElevation(pressedElevation = 1.dp),
+        border = BorderStroke(width = 1.dp, color = Color.DarkGray.copy(alpha = 1f))
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 6.dp, bottom = 6.dp, top = 6.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = buildAnnotatedString {
+                withStyle(
+                    SpanStyle(
+                        color = Color.DarkGray,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                ) {
+                    append("Title: ")
+                }
+                withStyle(
+                    SpanStyle(
+                        color = Color.Black,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraLight,
+                        fontFamily = FontFamily.Serif
+                    )
+                ) {
+                    append(item.title)
+                }
+            }
+            )
+
+            Text(text = buildAnnotatedString {
+                withStyle(
+                    SpanStyle(
+                        color = Color.DarkGray,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontFamily = FontFamily.Serif
+                    )
+                ) {
+                    append("Comment: ")
+                }
+                withStyle(
+                    SpanStyle(
+                        color = Color.Black,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraLight,
+                        fontFamily = FontFamily.Serif
+                    )
+                ) {
+                    append(item.comment)
+                }
+            }
+            )
         }
     }
 }
