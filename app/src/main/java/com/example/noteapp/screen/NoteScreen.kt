@@ -112,9 +112,9 @@ fun NoteScreen(
             )
             Divider(modifier = Modifier.fillMaxWidth(), thickness = 4.dp)
             LazyColumn(modifier = Modifier.padding(top = 10.dp, start = 10.dp, end = 10.dp)) {
-                items(items = itemList) { newItem ->
-                    ContentRow(item = newItem) {
-                        onDelete(it)
+                items(items = itemList) { note ->
+                    ContentRow(item = note) {
+                        onDelete(note)
                     }
                 }
             }
@@ -155,6 +155,7 @@ private fun TopAppBarComposable(expanded: MutableState<Boolean>) {
 
 @Composable
 fun ContentRow(item: Items, onItemClick: (Items) -> Unit) {
+    //TODO fixed delete bug also adding viewmodel later for state management.
     Card(
         modifier = Modifier
             .clickable { onItemClick(item) }
