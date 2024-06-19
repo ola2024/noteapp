@@ -1,8 +1,13 @@
 package com.example.noteapp.model
 
+import java.time.LocalDateTime
+import java.util.UUID
+
 data class Items(
+    val Id: UUID = UUID.randomUUID(),
     val title: String,
-    val comment: String
+    val comment: String,
+    val entryDate:LocalDateTime = LocalDateTime.now()
 )
 
 fun dummyDate() = listOf(

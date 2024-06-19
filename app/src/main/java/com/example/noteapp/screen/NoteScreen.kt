@@ -1,5 +1,6 @@
 package com.example.noteapp.screen
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -13,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -28,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -41,13 +44,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.noteapp.R
 import com.example.noteapp.common.InputTextField
-import com.example.noteapp.model.dummyDate
 import com.example.noteapp.model.Items
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteScreen(
-    itemList: List<Items> = dummyDate()
+    itemList: List<Items>,
+    onAdd: (Items) -> Unit,
+    onDelete: (Items) -> Unit
 ) {
     val expanded = remember {
         mutableStateOf(false)
@@ -58,6 +63,7 @@ fun NoteScreen(
     val addNote = remember {
         mutableStateOf("")
     }
+    val context = LocalContext.current
     Column(modifier = Modifier.padding(6.dp)) {
 
         TopAppBarComposable(expanded)
@@ -91,17 +97,25 @@ fun NoteScreen(
                 readOnly = false,
                 colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent)
             ) { addNote.value = it }
-             NoteButton(
-                 uiText = stringResource(id = R.string.save),
-                 onClick = {
-                           //TODO Handle click event here
-                 },
-                 enable = true
-             )
+            NoteButton(
+                uiText = stringResource(id = R.string.save),
+                onClick = {
+                    //TODO Handle click event here
+                    if (title.value.isNotEmpty() && addNote.value.isNotEmpty()) {
+                        onAdd(Items(title = title.value, comment = addNote.value))
+                        title.value = ""
+                        addNote.value = ""
+                        Toast.makeText(context,"Note Added",Toast.LENGTH_LONG).show()
+                    }
+                },
+                enable = true
+            )
             Divider(modifier = Modifier.fillMaxWidth(), thickness = 4.dp)
             LazyColumn(modifier = Modifier.padding(top = 10.dp, start = 10.dp, end = 10.dp)) {
                 items(items = itemList) { newItem ->
-                    ContentRow(item = newItem)
+                    ContentRow(item = newItem) {
+                        onDelete(it)
+                    }
                 }
             }
         }
@@ -140,9 +154,10 @@ private fun TopAppBarComposable(expanded: MutableState<Boolean>) {
 }
 
 @Composable
-fun ContentRow(item: Items) {
+fun ContentRow(item: Items, onItemClick: (Items) -> Unit) {
     Card(
         modifier = Modifier
+            .clickable { onItemClick(item) }
             .fillMaxWidth()
             .padding(bottom = 10.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
@@ -202,6 +217,29 @@ fun ContentRow(item: Items) {
                 }
             }
             )
+            Text(text = buildAnnotatedString {
+                withStyle(
+                    SpanStyle(
+                        color = Color.DarkGray,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontFamily = FontFamily.Serif
+                    )
+                ) {
+                    append("Time: ")
+                }
+                withStyle(
+                    SpanStyle(
+                        color = Color.Black,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.ExtraLight,
+                        fontFamily = FontFamily.Serif
+                    )
+                ) {
+                    append(item.entryDate.format(DateTimeFormatter.ofPattern("EEE,d MMM")))
+                }
+            }
+            )
         }
     }
 }
@@ -212,7 +250,12 @@ fun NoteButton(
     onClick: () -> Unit,
     enable: Boolean
 ) {
-    Button(onClick = onClick, enabled = enable, shape = CircleShape) {
+    Button(
+        onClick = onClick,
+        enabled = enable,
+        shape = CircleShape,
+        colors = ButtonDefaults.buttonColors(Color.Red)
+    ) {
         Text(uiText)
     }
 }
@@ -220,5 +263,5 @@ fun NoteButton(
 @Preview
 @Composable
 fun PreviewCompose() {
-    NoteScreen()
+    NoteScreen(onAdd = {}, onDelete = {}, itemList = emptyList())
 }
