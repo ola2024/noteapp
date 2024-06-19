@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -59,32 +60,7 @@ fun NoteScreen(
     }
     Column(modifier = Modifier.padding(6.dp)) {
 
-        TopAppBar(
-            title = {
-                Text(
-                    modifier = Modifier,
-                    text = stringResource(id = R.string.app_name),
-                    style = TextStyle(fontStyle = FontStyle.Normal),
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily.SansSerif
-                )
-            }, actions = {
-                Column(
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Info,
-                        contentDescription = "Information",
-                        modifier = Modifier.clickable { expanded.value = !expanded.value }
-                    )
-                    AnimatedVisibility(visible = expanded.value) {
-                        Text(text = "This App is a Note App")
-                    }
-                }
-            }
-        )
+        TopAppBarComposable(expanded)
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -131,6 +107,37 @@ fun NoteScreen(
             }
         }
     }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun TopAppBarComposable(expanded: MutableState<Boolean>) {
+    TopAppBar(
+        title = {
+            Text(
+                modifier = Modifier,
+                text = stringResource(id = R.string.app_name),
+                style = TextStyle(fontStyle = FontStyle.Normal),
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 20.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+        }, actions = {
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = "Information",
+                    modifier = Modifier.clickable { expanded.value = !expanded.value }
+                )
+                AnimatedVisibility(visible = expanded.value) {
+                    Text(text = "This App is a Note App")
+                }
+            }
+        }
+    )
 }
 
 @Composable
