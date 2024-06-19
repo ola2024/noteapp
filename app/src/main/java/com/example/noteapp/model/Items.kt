@@ -1,8 +1,8 @@
 package com.example.noteapp.model
 
 data class Items(
-    val title:String,
-    val comment:String
+    val title: String,
+    val comment: String
 )
 
 fun dummyDate() = listOf(
