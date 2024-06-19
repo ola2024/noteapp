@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -91,14 +91,13 @@ fun NoteScreen(
                 readOnly = false,
                 colors = TextFieldDefaults.textFieldColors(containerColor = Color.Transparent)
             ) { addNote.value = it }
-
-            Button(
-                onClick = { },
-                modifier = Modifier.padding(top = 20.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.DarkGray.copy(alpha = 1f))
-            ) {
-                Text(text = stringResource(id = R.string.save))
-            }
+             NoteButton(
+                 uiText = stringResource(id = R.string.save),
+                 onClick = {
+                           //TODO Handle click event here
+                 },
+                 enable = true
+             )
             Divider(modifier = Modifier.fillMaxWidth(), thickness = 4.dp)
             LazyColumn(modifier = Modifier.padding(top = 10.dp, start = 10.dp, end = 10.dp)) {
                 items(items = itemList) { newItem ->
@@ -204,6 +203,17 @@ fun ContentRow(item: Items) {
             }
             )
         }
+    }
+}
+
+@Composable
+fun NoteButton(
+    uiText: String,
+    onClick: () -> Unit,
+    enable: Boolean
+) {
+    Button(onClick = onClick, enabled = enable, shape = CircleShape) {
+        Text(uiText)
     }
 }
 
