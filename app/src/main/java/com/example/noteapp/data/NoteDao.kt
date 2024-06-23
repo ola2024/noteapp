@@ -4,18 +4,30 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import com.example.noteapp.model.Items
+import androidx.room.Query
+import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
-
+// This interface contains function that query the SQLite
 @Dao
 interface NoteDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertNote(note: List<Items>)
+    suspend fun insertNote(note: Items)
 
     @Delete
-    fun deleteNote(note: Items)
+    suspend fun deleteNote(note: Items)
 
-    //@Insert("SELECT * FROM note_table WHERE id = ")
+    @Query(value = "SELECT * FROM note_table")
+    fun getAllNotes(): Flow<List<Items>>
+
+    @Query(value = "SELECT * FROM note_table WHERE id = :id")
+    suspend fun getNoteById(id: String): Items
+
+    @Update(onConflict = OnConflictStrategy.ABORT)
+    suspend fun updateNote(note: Items)
+
+    @Query("DELETE FROM note_table")
+    suspend fun deleteAllNote()
 
 }

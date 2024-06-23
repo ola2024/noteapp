@@ -44,7 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.noteapp.R
 import com.example.noteapp.common.InputTextField
-import com.example.noteapp.model.Items
+import com.example.noteapp.data.Items
+import com.example.noteapp.util.convertDateToLong
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -105,7 +106,7 @@ fun NoteScreen(
                         onAdd(Items(title = title.value, comment = addNote.value))
                         title.value = ""
                         addNote.value = ""
-                        Toast.makeText(context,"Note Added",Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "Note Added", Toast.LENGTH_LONG).show()
                     }
                 },
                 enable = true
@@ -237,7 +238,7 @@ fun ContentRow(item: Items, onItemClick: (Items) -> Unit) {
                         fontFamily = FontFamily.Serif
                     )
                 ) {
-                    append(item.entryDate.format(DateTimeFormatter.ofPattern("EEE,d MMM")))
+                    append(convertDateToLong(item.entryDate.time))
                 }
             }
             )
