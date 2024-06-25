@@ -46,7 +46,6 @@ import com.example.noteapp.R
 import com.example.noteapp.common.InputTextField
 import com.example.noteapp.data.Items
 import com.example.noteapp.util.convertDateToLong
-import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

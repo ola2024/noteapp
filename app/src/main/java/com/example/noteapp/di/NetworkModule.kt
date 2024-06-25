@@ -21,25 +21,19 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideNoteDao(noteDataBase: NoteDataBase): NoteDao {
-        return noteDataBase.noteDao
-    }
+    fun provideNoteDao(noteDataBase: NoteDataBase): NoteDao = noteDataBase.noteDao()
 
     @Singleton
     @Provides
-
-    fun provideNoteDataBase(@ApplicationContext context: Context) =
+    fun provideNoteDataBase(@ApplicationContext context: Context): NoteDataBase =
         Room.databaseBuilder(
             context,
             NoteDataBase::class.java,
-            name = "my_data_base"
+            name = "database_db",
         ).build()
 
 
     @Singleton
     @Provides
-    fun provideNoteRepositoryImpl(noteDao: NoteDao): NoteRepository {
-        return NoteRepositoryImpl(noteDao)
-
-    }
+    fun provideNoteRepositoryImpl(noteDao: NoteDao): NoteRepository = NoteRepositoryImpl(noteDao)
 }

@@ -12,5 +12,5 @@ import androidx.room.TypeConverters
 )
 @TypeConverters(DateNoteTypeConverter::class, UUIDNoteTypeConverter::class)
 abstract class NoteDataBase : RoomDatabase() {
-    abstract val noteDao: NoteDao
+    abstract fun noteDao(): NoteDao
 }
